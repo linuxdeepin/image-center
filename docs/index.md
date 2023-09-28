@@ -6,9 +6,9 @@
 
 ---
 
-**Documentation**: <a href="https://funny-dream.github.io/image-center" target="_blank">https://funny-dream.github.io/image-center</a>
+**Documentation**: <a href="https://linuxdeepin.github.io/image-center" target="_blank">https://linuxdeepin.github.io/image-center</a>
 
-**Source Code**: <a href="https://github.com/funny-dream/image-center" target="_blank">https://github.com/funny-dream/image-center</a>
+**Source Code**: <a href="https://github.com/linuxdeepin/image-center" target="_blank">https://github.com/linuxdeepin/image-center</a>
 
 ---
 
@@ -16,14 +16,12 @@
 
 ```console
 pip install image-center
----> 100%
 ```
 
 如果想在本机直接使用图像识别，还需要在本机安装OpenCV
 
 ```console
 sudo apt install python3-opencv
----> 100%
 ```
 
 ## 使用说明

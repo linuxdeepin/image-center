@@ -42,5 +42,5 @@ include = [
 ]
 
 [project.urls]
-Source = "https://github.com/funny-dream/image-center"
-Documentation = "https://funny-dream.github.io/image-center"
+Source = "https://github.com/linuxdeepin/image-center"
+Documentation = "https://linuxdeepin.github.io/image-center"
