@@ -13,12 +13,18 @@ class _Setting:
     IMAGE_RATE = 0.9
     SCREEN_CACHE = "/tmp/screen.png"
     TMPDIR = "/tmp/tmpdir"
-    IMAGE_MATCH_NUMBER = 1
-    IMAGE_MATCH_WAIT_TIME = 1
+    # IMAGE_MATCH_NUMBER = 1
+    # IMAGE_MATCH_WAIT_TIME = 1
 
     # RPC config
     SERVER_IP = ""
     PORT = 8889
+    NETWORK_RETRY =1
+    PAUSE = 1
+    TIMEOUT = 5
+    MAX_MATCH_NUMBER = 100
+
+
 
     if platform.system() == "Linux":
         # 显示服务器
