@@ -72,6 +72,7 @@ class ImageCenter:
             picture_abspath: str = None,
             screen_bbox: List[int] = None,
             log_level: str = "info",
+            network_retry: int = 1,
     ):
         """
          图像识别，匹配小图在屏幕中的坐标 x, y
@@ -82,6 +83,7 @@ class ImageCenter:
         :param screen_bbox: 截取屏幕上指定区域图片（仅支持X11下使用）；
             [x, y, w, h]
             x: 左上角横坐标；y: 左上角纵坐标；w: 宽度；h: 高度；根据匹配度返回坐标
+        :param network_retry: 连接服务器重试次数
         """
         # pylint: disable=I1101,E1101
         if rate is None:
@@ -105,18 +107,19 @@ class ImageCenter:
             screen_rb = open(screen, "rb")
             # pylint: disable=consider-using-with
             template_rb = open(template_path, "rb")
-            try:
-                screen_path = server.image_put(Binary(screen_rb.read()))
-                screen_rb.close()
-                tpl_path = server.image_put(Binary(template_rb.read()))
-                template_rb.close()
-                return server.match_image_by_opencv(
-                    tpl_path, screen_path, rate, multiple
-                )
-            except OSError as exc:
-                raise EnvironmentError(
-                    f"RPC服务器链接失败. http://{setting.SERVER_IP}:{setting.PORT}"
-                ) from exc
+            for _ in range(network_retry + 1):
+                try:
+                    screen_path = server.image_put(Binary(screen_rb.read()))
+                    screen_rb.close()
+                    tpl_path = server.image_put(Binary(template_rb.read()))
+                    template_rb.close()
+                    return server.match_image_by_opencv(
+                        tpl_path, screen_path, rate, multiple
+                    )
+                except OSError as exc:
+                    raise EnvironmentError(
+                        f"RPC服务器链接失败. http://{setting.SERVER_IP}:{setting.PORT}"
+                    ) from exc
         else:
             if not os.path.exists(template_path):
                 raise TemplatePictureNotExist(template_path)
@@ -210,11 +213,13 @@ class ImageCenter:
             *widget,
             rate: Union[float, int] = None,
             multiple: bool = False,
-            match_number: int = None,
-            pause: Union[int, float] = None,
             picture_abspath: str = None,
             screen_bbox: List[int] = None,
-            log_level: str = "info"
+            log_level: str = "info",
+            network_retry: int = None,
+            pause: [int, float] = None,
+            timeout: [int, float] = None,
+            max_match_number: int = None,
     ):
         """
          在屏幕中区寻找小图，返回坐标，
@@ -223,17 +228,22 @@ class ImageCenter:
         :param widget: 模板图片路径
         :param rate: 相似度
         :param multiple: 是否返回匹配到的多个目标
-        :param match_number: 图像识别重试次数
-        :param pause: 图像识别重试的间隔时间
         :param screen_bbox: 截取屏幕上指定区域图片（仅支持X11下使用）；
             [x, y, w, h]
             x: 左上角横坐标；y: 左上角纵坐标；w: 宽度；h: 高度；根据匹配度返回坐标
         :param log_level: 日志级别
+        :param network_retry: 连接服务器重试次数
+        :param pause: 图像识别重试的间隔时间
+        :param timeout: 最大匹配超时,单位秒
+        :param max_match_number: 最大匹配次数
         :return: 坐标元组
         """
-        retry_number = int(setting.IMAGE_MATCH_NUMBER)
-        if match_number is not None:
-            retry_number = match_number
+        network_retry = network_retry if network_retry else setting.NETWORK_RETRY
+        pause = pause if pause else setting.PAUSE
+        timeout = timeout if timeout else setting.TIMEOUT
+        max_match_number = max_match_number if max_match_number else setting.MAX_MATCH_NUMBER
+
+        retry_number = int(max_match_number)
         if retry_number < 0:
             raise ValueError("重试次数不能小于0")
 
@@ -241,6 +251,7 @@ class ImageCenter:
             rate = float(setting.IMAGE_RATE)
         try:
             for element in widget:
+                start_time = time.time()
                 for _ in range(retry_number + 1):
                     locate = cls._match_image_by_opencv(
                         element,
@@ -248,15 +259,17 @@ class ImageCenter:
                         multiple=multiple,
                         picture_abspath=picture_abspath,
                         screen_bbox=screen_bbox,
-                        log_level=log_level
+                        log_level=log_level,
+                        network_retry=network_retry,
                     )
                     if not locate:
-                        sleep_time = int(setting.IMAGE_MATCH_WAIT_TIME)
-                        if pause is not None:
-                            sleep_time = pause
+                        sleep_time = int(pause)
                         sleep(sleep_time)
                     else:
                         return locate
+                    end_time = time.time()
+                    if end_time-start_time > timeout:
+                        break
             raise TemplateElementNotFound(*widget)
         except Exception as exc:
             raise exc
