@@ -64,3 +64,36 @@ setting.PORT = 8889 # 和服务端端口保持一致
 
 ImageCenter.find_image("~/Desktop/test.png") # test.png是你自己截的图，路径也修改成你自己的路径
 ```
+其他参数
+
+- 待查找的大图文件路径
+
+    picture_abspath: /tmp/screen.png
+- 模板图片路径
+
+  widget: /test/icon.png
+- 用于匹配图片时的相似度权重 
+
+    rate: 0.9
+- 是否同时返回多个匹配结果
+
+    param multiple: False
+- 截取屏幕上指定区域图片（仅支持X11下使用）
+
+    screen_bbox: [x, y, w, h]
+    x: 左上角横坐标；y: 左上角纵坐标；w: 宽度；h: 高度；根据匹配度返回坐标
+- 日志级别
+
+    log_level: "info"
+- 网络异常重试次数
+
+    network_retry: 1
+- 图像识别重试的间隔时间,单位秒
+
+    pause: 1
+- 最大匹配超时,单位秒
+
+    timeout: 5
+- 最大匹配次数
+
+    max_match_number: 100
