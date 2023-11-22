@@ -7,8 +7,7 @@
 import logging
 import os
 import random
-from time import sleep
-from time import time
+import time
 from typing import List, Union
 from xmlrpc.client import Binary
 from xmlrpc.client import ServerProxy
@@ -193,7 +192,7 @@ class ImageCenter:
         # pylint: disable=I1101,E1101
         if not os.path.exists(setting.TMPDIR):
             os.popen(f"mkdir {setting.TMPDIR}")
-        _pic_path = f"{setting.TMPDIR}/{int(time())}"
+        _pic_path = f"{setting.TMPDIR}/{int(time.time())}"
 
         if setting.IS_X11:
             pyscreenshot.grab().save(setting.SCREEN_CACHE)
@@ -263,12 +262,11 @@ class ImageCenter:
                         network_retry=network_retry,
                     )
                     if not locate:
-                        sleep_time = int(pause)
-                        sleep(sleep_time)
+                        time.sleep(int(pause))
                     else:
                         return locate
                     end_time = time.time()
-                    if end_time-start_time > timeout:
+                    if end_time - start_time > timeout:
                         break
             raise TemplateElementNotFound(*widget)
         except Exception as exc:
@@ -343,15 +341,15 @@ class ImageCenter:
         os.system(f"rm -rf {during_path}")
         os.makedirs(during_path)
         pics = []
-        start_time = time()
+        start_time = time.time()
         for i in range(max_range):
-            pic_name = f"{during_path}/{time()}_{i}.png"
+            pic_name = f"{during_path}/{time.time()}_{i}.png"
             pics.append(pic_name)
             pyscreenshot.grab().save(pic_name)
-            if time() - start_time >= screen_time:
+            if time.time() - start_time >= screen_time:
                 break
             if pause:
-                sleep(pause)
+                time.sleep(pause)
         if not pics:
             raise ValueError
         for pic_path in pics:
