@@ -308,7 +308,7 @@ class ImageCenter:
         try:
             return bool(cls.find_image(widget, rate=rate))
         # pylint: disable=broad-except
-        except Exception as exc:
+        except TemplateElementNotFound as exc:
             logger.warning(exc)
             return False
 
