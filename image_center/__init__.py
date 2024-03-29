@@ -99,7 +99,7 @@ class ImageCenter:
                     screen = os.popen(cls.wayland_screen_dbus).read().strip("\n")
         else:
             screen = picture_abspath
-        template_path = f"{image_path}.png"
+        template_path = os.path.expanduser(f"{image_path}.png")
         if GET_OPENCV_FORM_RPC:
             server = ServerProxy(f"http://{setting.SERVER_IP}:{setting.PORT}", allow_none=True)
             # pylint: disable=consider-using-with
