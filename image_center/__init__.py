@@ -12,6 +12,8 @@ from typing import List, Union
 from xmlrpc.client import Binary
 from xmlrpc.client import ServerProxy
 
+import easyprocess
+
 try:
     import cv2 as cv
     import numpy as np
@@ -94,7 +96,10 @@ class ImageCenter:
                 screen = cls.save_temporary_picture(*screen_bbox) + ".png"
             else:
                 if setting.IS_X11:
-                    pyscreenshot.grab().save(screen)
+                    try:
+                        pyscreenshot.grab().save(screen)
+                    except easyprocess.EasyProcessError:
+                        ...
                 else:
                     screen = os.popen(cls.wayland_screen_dbus).read().strip("\n")
         else:
@@ -117,7 +122,7 @@ class ImageCenter:
                     )
                 except OSError as exc:
                     raise EnvironmentError(
-                        f"RPC服务器链接失败. http://{setting.SERVER_IP}:{setting.PORT}"
+                        f"OCR 服务器链接失败. http://{setting.SERVER_IP}:{setting.PORT}"
                     ) from exc
         else:
             if not os.path.exists(template_path):
