@@ -6,12 +6,15 @@
 # SPDX-License-Identifier: Apache Software License
 import os
 import platform
-
+import tempfile
 
 class _Setting:
     PIC_PATH = ""
     IMAGE_RATE = 0.9
     SCREEN_CACHE = "/tmp/screen.png"
+    # Win default path——C:\\Users\\xxxx\\AppData\\Local\\Temp
+    # Linux_MacOS default path——/tmp/screen.png
+    SCREEN_CACHE = os.path.join(tempfile.gettempdir(), 'screen.png')  # /tmp/screen.png
     TMPDIR = "/tmp/tmpdir"
     # IMAGE_MATCH_NUMBER = 1
     # IMAGE_MATCH_WAIT_TIME = 1
@@ -38,7 +41,11 @@ class _Setting:
 
         IS_X11 = (DISPLAY_SERVER == DisplayServer.x11)
         IS_WAYLAND = (DISPLAY_SERVER == DisplayServer.wayland)
+    elif platform.system() == "Darwin":
+        IS_X11 = False
+        IS_WAYLAND = False
     elif platform.system() == "Windows":
-        ...
+        IS_X11 = False
+        IS_WAYLAND = False
 
 setting = _Setting()
