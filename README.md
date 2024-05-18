@@ -29,8 +29,10 @@ sudo apt install python3-opencv
 
 ```python
 from image_center import ImageCenter
-
+# Linux and MacOS
 ImageCenter.find_image("~/Desktop/test.png")
+# Windows
+ImageCenter.find_image("D:\\test.png")
 ```
 
 返回 `test.png` 在当前屏幕中的位置。
@@ -61,5 +63,9 @@ from image_center.conf import setting
 setting.SERCER_IP = "192.168.2.1"  # 服务端IP
 setting.PORT = 8889 # 和服务端端口保持一致
 
+# Linux and MacOS
 ImageCenter.find_image("~/Desktop/test.png") # test.png是你自己截的图，路径也修改成你自己的路径
+
+# Windows
+ImageCenter.find_image("D:\\test.png")
 ```
