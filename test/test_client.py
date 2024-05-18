@@ -14,3 +14,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 def test_client():
     res = ImageCenter.find_image(f"{current_dir}/test.png")
     assert res
+
+def test_client_to():
+    res = ImageCenter.find_image(f"{current_dir}/test")
+    assert res
