@@ -108,7 +108,10 @@ class ImageCenter:
 
         else:
             screen = picture_abspath
-        template_path = os.path.expanduser(f"{image_path}")
+        if os.name == 'nt':  # Windows
+            template_path = os.path.expanduser(image_path)
+        else:  # Linux and MacOS
+            template_path = os.path.expanduser(f"{image_path}")
         if GET_OPENCV_FORM_RPC:
             server = ServerProxy(f"http://{setting.SERVER_IP}:{setting.PORT}", allow_none=True)
             # pylint: disable=consider-using-with
