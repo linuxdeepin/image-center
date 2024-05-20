@@ -15,21 +15,26 @@ def test_client_png():
     res = ImageCenter.find_image(f"{current_dir}/test.png")
     assert res
 
+
 def test_client_png_to():
     res = ImageCenter.find_image(f"{current_dir}/test")
     assert res
+
 
 def test_client_jpg():
     res = ImageCenter.find_image(f"{current_dir}/test1.jpg")
     assert res
 
+
 def test_client_jpg_to():
     res = ImageCenter.find_image(f"{current_dir}/test1")
     assert res
 
+
 def test_client_jpeg():
     res = ImageCenter.find_image(f"{current_dir}/test2.jpeg")
     assert res
+
 
 def test_client_jpeg_to():
     res = ImageCenter.find_image(f"{current_dir}/test2")
