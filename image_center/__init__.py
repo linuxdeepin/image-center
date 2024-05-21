@@ -77,7 +77,7 @@ class ImageCenter:
     ):
         """
          图像识别，匹配小图在屏幕中的坐标 x, y，当前仅支持1个主屏幕，如果存在多个屏幕只会截取主屏幕内容。
-        :param image_path: 图像识别目标文件的存放路径
+        :param image_path: 图像识别目标文件的存放路径,仅支持英文文件名，不支持中文文件名
         :param rate: 匹配度
         :param multiple: 是否返回匹配到的多个目标
         :param picture_abspath: 大图，默认大图是截取屏幕，否则使用传入的图片；
@@ -108,7 +108,21 @@ class ImageCenter:
 
         else:
             screen = picture_abspath
-        template_path = os.path.expanduser(f"{image_path}")
+
+        # 如果传入的image_path参数不带文件后缀名，就根据文件类型判断文件是否存在，存在则将后缀类型（'.png','.jpg','.jpeg'）加上
+        if not image_path.endswith(('.png', '.jpg', '.jpeg')):
+            if os.path.exists(f"{image_path}.png"):
+                template_path = os.path.expanduser(f"{image_path}.png")
+            elif os.path.exists(f"{image_path}.jpg"):
+                template_path = os.path.expanduser(f"{image_path}.jpg")
+            elif os.path.exists(f"{image_path}.jpeg"):
+                template_path = os.path.expanduser(f"{image_path}.jpeg")
+            else:
+                logger.warning(f"The image format is not supported. Please confirm your image_path again")
+        else:
+            # image_path参数带有后缀名，不做任何添加
+            template_path = os.path.expanduser(f"{image_path}")
+
         if GET_OPENCV_FORM_RPC:
             server = ServerProxy(f"http://{setting.SERVER_IP}:{setting.PORT}", allow_none=True)
             # pylint: disable=consider-using-with

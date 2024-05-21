@@ -25,7 +25,9 @@ sudo apt install python3-opencv
 
 ## 使用说明
 
-截取目标元素图片，将图片保存到某个路径；
+截取目标元素图片，将图片保存到某个路径,
+
+图片格式：默认使用PNG格式，支持JPG和JPEG格式；
 
 ```python
 from image_center import ImageCenter
