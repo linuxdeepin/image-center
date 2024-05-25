@@ -42,7 +42,7 @@ class TemplateElementNotFound(BaseException):
         :param name: 命令
         """
         err = f"通过图片资源, 未在屏幕上匹配到元素"
-        template = [f"{i}.png" for i in name]
+        template = [f"{i}" for i in name]
         BaseException.__init__(self, err, *template)
 
 
