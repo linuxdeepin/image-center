@@ -25,8 +25,8 @@ class _Setting:
     PAUSE = 1
     TIMEOUT = 5
     MAX_MATCH_NUMBER = 100
-
-
+    IS_X11 = False
+    IS_WAYLAND = False
 
     if platform.system() == "Linux":
         # 显示服务器
@@ -41,10 +41,10 @@ class _Setting:
         IS_X11 = (DISPLAY_SERVER == DisplayServer.x11)
         IS_WAYLAND = (DISPLAY_SERVER == DisplayServer.wayland)
     elif platform.system() == "Darwin":
-        IS_X11 = False
-        IS_WAYLAND = False
+        # MacOS
+        IS_MACOS = True
     elif platform.system() == "Windows":
-        IS_X11 = False
-        IS_WAYLAND = False
+        # windows
+        IS_WINDOWS = True
 
 setting = _Setting()

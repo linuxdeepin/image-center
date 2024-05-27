@@ -95,15 +95,18 @@ class ImageCenter:
             if screen_bbox:
                 screen = cls.save_temporary_picture(*screen_bbox) + ".png"
             else:
-                if setting.IS_X11:
-                    try:
-                        pyscreenshot.grab().save(screen)
-                    except easyprocess.EasyProcessError:
-                        ...
-                elif setting.IS_WAYLAND:
-                    screen = os.popen(cls.wayland_screen_dbus).read().strip("\n")
+                if setting.IS_LINUX:
+                    if setting.IS_X11:
+                        try:
+                            pyscreenshot.grab().save(screen)
+                        except easyprocess.EasyProcessError:
+                            ...
+                    else:
+                        # setting.IS_WAYLAND
+                        screen = os.popen(cls.wayland_screen_dbus).read().strip("\n")
                 else:
-                    #for windows and macos
+                    # setting.IS_WINDOWS or setting.IS_MACOS:
+                    # for windows and macos
                     pyscreenshot.grab().save(screen)
 
         else:
