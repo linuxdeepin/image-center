@@ -8,17 +8,21 @@ import enum
 import os
 import platform
 import tempfile
+from os import popen
+
 
 @enum.unique
 class DisplayServer(enum.Enum):
     wayland = "wayland"
     x11 = "x11"
 
+
 @enum.unique
 class PlatForm(enum.Enum):
     win = "Windows"
     linux = "Linux"
     macos = "Darwin"
+
 
 class _Setting:
     """配置模块"""
@@ -38,8 +42,8 @@ class _Setting:
     IMAGE_RATE = 0.9
     # Win default path——C:\\Users\\xxxx\\AppData\\Local\\Temp
     # Linux_MacOS default path——/tmp/screen.png
-    SCREEN_CACHE = os.path.join(tempfile.gettempdir(), 'screen.png')  # SCREEN_CACHE = "/tmp/screen.png"
-    TMPDIR = "/tmp/tmpdir"
+    SCREEN_CACHE = os.path.join(tempfile.gettempdir(), 'screen.png')
+    TMPDIR = os.path.join(tempfile.gettempdir(), 'tmpdir')
     # IMAGE_MATCH_NUMBER = 1
     # IMAGE_MATCH_WAIT_TIME = 1
 
@@ -50,15 +54,18 @@ class _Setting:
         # MacOS
         IS_MACOS = True
     elif platform.system() == PlatForm.linux.value:
+        # Linux
+        IS_LINUX = True
         # 显示服务器
         DISPLAY_SERVER = (
-            os.popen("cat ~/.xsession-errors | grep XDG_SESSION_TYPE | head -n 1")
-            .read()
-            .split("=")[-1]
-            .strip("\n")
-        )
+                             popen("cat ~/.xsession-errors | grep XDG_SESSION_TYPE | head -n 1")
+                             .read()
+                             .split("=")[-1]
+                             .strip("\n")
+                         ) or ("x11" if popen("ps -ef | grep -v grep | grep kwin_x11").read() else "wayland")
 
         IS_X11 = DISPLAY_SERVER == DisplayServer.x11.value
         IS_WAYLAND = DISPLAY_SERVER == DisplayServer.wayland.value
+
 
 setting = _Setting()
