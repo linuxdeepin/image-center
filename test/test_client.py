@@ -39,3 +39,11 @@ def test_client_jpeg():
 def test_client_jpeg_to():
     res = ImageCenter.find_image(f"{current_dir}/test2")
     assert res
+
+if __name__ == "__main__":
+    test_client_png()
+    test_client_png_to()
+    test_client_jpg()
+    test_client_jpg_to()
+    test_client_jpeg()
+    test_client_jpeg_to()
