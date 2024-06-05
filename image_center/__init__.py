@@ -111,7 +111,7 @@ class ImageCenter:
 
         else:
             screen = picture_abspath
-
+        image_path = os.path.expanduser(image_path)
         # 如果传入的image_path参数不带文件后缀名，就根据文件类型判断文件是否存在，存在则将后缀类型（'.png','.jpg','.jpeg'）加上
         if not image_path.endswith(('.png', '.jpg', '.jpeg')):
             if os.path.exists(f"{image_path}.png"):
@@ -124,7 +124,7 @@ class ImageCenter:
                 logger.warning(f"The image format is not supported. Please confirm your image_path again")
         else:
             # image_path参数带有后缀名，不做任何添加
-            template_path = os.path.expanduser(f"{image_path}")
+            template_path = image_path
 
         if GET_OPENCV_FORM_RPC:
             server = ServerProxy(f"http://{setting.SERVER_IP}:{setting.PORT}", allow_none=True)

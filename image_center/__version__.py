@@ -6,4 +6,4 @@
 # SPDX-License-Identifier: Apache Software License
 __title__ = "image-center"
 
-__version__ = "2024.05.29"
+__version__ = "2024.06.05"
